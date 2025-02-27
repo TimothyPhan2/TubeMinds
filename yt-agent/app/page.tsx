@@ -1,3 +1,4 @@
+import CTABtn from "@/components/getStartedBtn";
 import YoutubeVideoForm from "@/components/YoutubeVideoForm";
 import {Brain,ScrollText, Bot, Pencil,Images, MessageCircle, Video } from "lucide-react"
 
@@ -22,59 +23,60 @@ export default function Home() {
   const features = [
     {
       title: "AI Analysis",
-      description: "Get insights into your content with AI analysis",
+      description: "Uncover content insights with advanced AI that identifies audience patterns and viral potential others miss.",
       icon: Brain,
       iconBg: "bg-blue-100",
       iconColor:"text-blue-500"
     },
     {
       title: "Smart Transcription",
-      description: "Transcribe your videos in minutes with AI-powered transcription",
+      description: "Convert speech to polished text with precision—automatically formatted for captions, blogs, or social media.",
       icon: MessageCircle,
       iconBg:"bg-green-100",
       iconColor:"text-green-500"
     },
     {
       title: "Thumbnail Generation",
-      description: "Generate thumbnails for your videos in seconds",
+      description: "Create high-impact thumbnails that boost click rates—our AI designs custom, attention-grabbing visuals instantly.",
       icon: Images,
       iconBg:"bg-yellow-100",
       iconColor:"text-yellow-500"
     },
     {
       title: "Title Generation",
-      description: "Generate titles for your videos in seconds",
+      description: "Develop SEO-optimized titles that rank higher and drive more views—based on trending patterns and engagement data.",
       icon: Pencil,
       iconBg:"bg-pink-100",
       iconColor:"text-pink-500"
     },
     {
       title: "Script Generation",
-      description: "Get detailed, step-by-step scripts to recreate viral videos",
+      description: "Convert concepts into compelling scripts with hooks, pacing cues, and emotional beats that keep viewers engaged.",
       icon: ScrollText,
       iconBg:"bg-purple-100",
       iconColor:"text-purple-500"
     },
     {
       title: "Agent Conversation",
-      description: "Interact with the AI agent to brainstorm new content ideas",
+      description: "Partner with an AI content strategist that understands your niche and audience to develop standout content ideas.",
       icon: Bot,
       iconBg:"bg-blue-100",
       iconColor:"text-blue-500"
     },
     
   ]
+
   return (
     <div className="min-h-screen">
       {/* Hero section */}
-      <section className="py-20 bg-gradient-to-br from-pink-500 to-violet-500">
-        <div className="container mx-auto px-4 ">
-          <div className="flex flex-col items-center justify-center gap-10 text-center mb-12">
-            <h1 className="text-4xl font-bold md:text-6xl">
+      <section className="py-20 relative">
+        <div className="container mx-auto px-4 relative">
+          <div className="flex flex-col items-center justify-center gap-10 text-center mb-12 relative z-10">
+            <h1 className="text-4xl font-bold md:text-6xl text-white">
               Meet Your Personal{" "}
-              <span className="text-pink-500">AI Content Agent</span>
+              <span className="text-pink-400">AI Content Agent</span>
             </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
               Unleash the power of AI to generate content that matches your
               style and generates high-quality content quickly and efficiently.
             </p>
@@ -85,21 +87,21 @@ export default function Home() {
         </div>
       </section>
       {/* Features section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 section-depth relative">
       <div className="container mx-auto px-4 max-w-6xl">
-        <h2 className="text-4xl font-bold mb-8 text-center">Features</h2>
+        <h2 className="text-4xl font-bold mb-12 text-center text-white">Features</h2>
         <div className="grid  md:grid-cols-2 lg:grid-cols-3 gap-6">
 
         {features.map((feature, index) => {
           const Icon = feature.icon
           return(
-            <div key={index} className="bg-white p-6 rounded-xl border border-gray-200 hover:border-blue-500 transition-all duration-300">
+            <div key={index} className="card-dark p-6">
               <div className={`flex items-center justify-center w-12 h-12 mb-4 rounded-full ${feature.iconBg}`}>
 
               <Icon className={`w-6 h-6 ${feature.iconColor}`}/>
               </div>
               <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-              <p className="text-gray-600">{feature.description}</p>
+              <p className="text-white/70">{feature.description}</p>
             </div>
           )
         })}
@@ -110,38 +112,57 @@ export default function Home() {
       </div>
       </section>
       {/* How it works section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 section-depth relative shadow-section bg-gradient-to-b from-transparent via-purple-900/5 to-transparent">
+        <div className="shadow-overlay"></div>
         <div className="container mx-auto px-4 max-w-6xl">
-          <h2 className="text-4xl font-bold mb-8 text-center">
+          <h2 className="text-4xl font-bold mb-12 text-center text-white">
             Meet Your AI Content Agent in 3 simple steps
           </h2>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-8">
           {steps.map((step, index) => {
             const Icon = step.icon
             return(
-              <div key={index} className="bg-white p-6 rounded-xl border border-gray-200 hover:border-blue-500 transition-all duration-300">
-                <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-violet-500 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div key={index} className="card-dark p-6 flex flex-col items-center text-center hover:border-purple-500/40">
+                <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-violet-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                   <Icon className="w-6 h-6 text-white"/>
                 </div>
                 <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
-                <p className="text-gray-600">{step.description}</p>
+                <p className="text-white/70">{step.description}</p>
               </div>
             )
           })}
           </div>
         </div>
       </section>
+      
       {/* Footer section */}
-      <section className="py-20 bg-gradient-to-br from-pink-500 to-violet-500">
-        <div className="text-center">
-          <h2 className="text-4xl font-bold mb-8">
-            Ready to take control of your content?
-          </h2>
-          <p className="text-xl text-blue-50">
-            Join creators leveraging AI to unlock content insights
-          </p>
+      <footer className="pt-20 pb-10 relative overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute top-0 left-1/4 w-64 h-64 bg-purple-500/10 rounded-full filter blur-3xl"></div>
+        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-pink-500/10 rounded-full filter blur-3xl"></div>
+        
+        <div className="container mx-auto px-4">
+          {/* CTA content */}
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-4xl font-bold mb-8 text-white">
+            Elevate Your YouTube Presence with AI-Powered Brilliance
+            </h2>
+            <p className="text-xl text-white/80">
+            From struggling creator to content powerhouse — in just one click
+            </p>
+            <CTABtn />
+          </div>
+          
+          {/* Bottom footer with copyright and links */}
+          <div className="border-t border-white/10 my-8"></div>
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <p className="text-white/50 text-sm">
+              &copy; {new Date().getFullYear()} AgentTube. All rights reserved.
+            </p>
+          
+          </div>
         </div>
-      </section>
+      </footer>
     </div>
   );
 }

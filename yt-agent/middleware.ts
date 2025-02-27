@@ -5,8 +5,18 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 const isProtectedRoute = createRouteMatcher(["/video(.*)"]);
 
+// public 
+const isPublicRoute = createRouteMatcher([
+  '/sign-in(.*)',
+  '/sign-up(.*)',
+  '/'
+])
 export default clerkMiddleware(async (auth, req) => {
     const { userId, redirectToSignIn } = await auth();
+
+    if (!isPublicRoute(req)) {
+      await auth.protect()
+    }
 
     if (!userId && isProtectedRoute(req)) {
         return redirectToSignIn();
