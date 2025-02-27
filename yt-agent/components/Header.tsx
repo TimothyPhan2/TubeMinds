@@ -46,7 +46,7 @@ export default function Header() {
                 </svg>
               </div>
               <h1 className="text-xl font-semibold bg-gradient-to-r from-pink-500 to-violet-500 text-transparent bg-clip-text group-hover:scale-105 transition-transform">
-                AgentTube
+                TubeMinds
               </h1>
             </Link>
           </div>

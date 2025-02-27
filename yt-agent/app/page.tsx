@@ -73,8 +73,8 @@ export default function Home() {
         <div className="container mx-auto px-4 relative">
           <div className="flex flex-col items-center justify-center gap-10 text-center mb-12 relative z-10">
             <h1 className="text-4xl font-bold md:text-6xl text-white">
-              Meet Your Personal{" "}
-              <span className="text-pink-400">AI Content Agent</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500">TubeMinds</span> - AI-Powered <br />
+              YouTube Content Creation
             </h1>
             <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
               Unleash the power of AI to generate content that matches your
@@ -116,7 +116,7 @@ export default function Home() {
         <div className="shadow-overlay"></div>
         <div className="container mx-auto px-4 max-w-6xl">
           <h2 className="text-4xl font-bold mb-12 text-center text-white">
-            Meet Your AI Content Agent in 3 simple steps
+            How TubeMinds Works in 3 Simple Steps
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
           {steps.map((step, index) => {
@@ -145,10 +145,10 @@ export default function Home() {
           {/* CTA content */}
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-4xl font-bold mb-8 text-white">
-            Elevate Your YouTube Presence with AI-Powered Brilliance
+            Elevate Your YouTube Presence with AI-Powered Intelligence
             </h2>
             <p className="text-xl text-white/80">
-            From struggling creator to content powerhouse — in just one click
+            From aspiring creator to content powerhouse — in just one click
             </p>
             <CTABtn />
           </div>
@@ -157,7 +157,7 @@ export default function Home() {
           <div className="border-t border-white/10 my-8"></div>
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-white/50 text-sm">
-              &copy; {new Date().getFullYear()} AgentTube. All rights reserved.
+              &copy; {new Date().getFullYear()} TubeMinds. All rights reserved.
             </p>
           
           </div>
