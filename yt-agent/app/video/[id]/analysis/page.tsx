@@ -20,24 +20,24 @@ export default function VideoAnalysisPage() {
   const [isLoadingChat, setIsLoadingChat] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  const handleSelectChat = async (chat: ChatHistory) => {
-    setIsLoadingChat(true);
-    try {
-      // In a real implementation, this would fetch the complete chat data
-      const fullChatData = await getChatById(chat.id);
-      if (fullChatData) {
-        setSelectedChat(fullChatData);
-        // Close sidebar on mobile after selection
-        if (window.innerWidth < 1024) {
-          setSidebarOpen(false);
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching chat details:", error);
-    } finally {
-      setIsLoadingChat(false);
-    }
-  };
+  // const handleSelectChat = async (chat: ChatHistory) => {
+  //   setIsLoadingChat(true);
+  //   try {
+  //     // In a real implementation, this would fetch the complete chat data
+  //     const fullChatData = await getChatById(chat.id);
+  //     if (fullChatData) {
+  //       setSelectedChat(fullChatData);
+  //       // Close sidebar on mobile after selection
+  //       if (window.innerWidth < 1024) {
+  //         setSidebarOpen(false);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching chat details:", error);
+  //   } finally {
+  //     setIsLoadingChat(false);
+  //   }
+  // };
 
   const handleBackToCurrentVideo = () => {
     setSelectedChat(null);
