@@ -9,7 +9,7 @@ import { FeatureFlag } from "@/features/flags";
 import { useParams } from "next/navigation";
 import { useState,} from "react";
 import { ChatHistory } from "@/types/types";
-import { getChatById } from "@/actions/getChatHistory";
+// import { getChatById } from "@/actions/getChatHistory";
 import { ArrowLeft, ChevronLeft, X, MessageSquare, PlayCircle, Image, FileText, PenTool, BarChart } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -19,6 +19,7 @@ export default function VideoAnalysisPage() {
   const [selectedChat, setSelectedChat] = useState<ChatHistory | null>(null);
   const [isLoadingChat, setIsLoadingChat] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  console.log(setIsLoadingChat)
 
   // const handleSelectChat = async (chat: ChatHistory) => {
   //   setIsLoadingChat(true);
