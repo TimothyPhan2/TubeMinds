@@ -26,7 +26,7 @@ export default function ThumbnailGeneration({ videoId }: { videoId: string }) {
       {/* Horizontal scrollable images */}
       <div className={`flex overflow-x-auto gap-4 ${images?.length && "mt-4"}`}>
         {images?.map(
-          (image, index) =>
+          (image) =>
             image.url && (
               <div
                 key={image._id}
