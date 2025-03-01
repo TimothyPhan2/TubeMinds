@@ -51,6 +51,7 @@ export async function checkFeatureUsageLimit(
       success: true,
     };
   } catch (error) {
+    console.error("Error checking feature usage limit:", error);
     return {
       success: false,
       error: "Error checking feature usage limit",

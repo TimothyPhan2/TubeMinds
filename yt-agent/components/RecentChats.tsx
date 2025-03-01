@@ -1,13 +1,14 @@
 "use client";
 
-import { Clock, Search } from "lucide-react";
+import {  Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { Id } from "@/convex/_generated/dataModel";
+
 import { getVideoDetails } from "@/actions/getVideoDetails";
+import { Doc } from "@/convex/_generated/dataModel";
 
 // Helper function to format relative time
 const formatRelativeTime = (timestamp: number): string => {
@@ -83,7 +84,7 @@ export default function RecentChats({ videoId }: RecentChatsProps) {
   };
   
   // Function to fetch video titles
-  const fetchVideoTitles = async (chats: any[]) => {
+  const fetchVideoTitles = async (chats: Doc<"chats">[]) => {
     if (!chats || chats.length === 0 || isLoadingTitles) return;
     
     setIsLoadingTitles(true);

@@ -1,13 +1,13 @@
 "use client";
 
-import { Message, useChat } from "@ai-sdk/react";
-import { BotIcon, MessageSquare, FileText, Image, Heading } from "lucide-react";
+import { useChat } from "@ai-sdk/react";
+import {  MessageSquare, FileText, Image, Heading } from "lucide-react";
 import { Button } from "./ui/button";
 import ReactMarkdown from "react-markdown";
 import { ChatMessage, ToolPart } from "@/types/types";
 import { useSchematicFlag } from "@schematichq/schematic-react";
 import { FeatureFlag } from "@/features/flags";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 const formatToolInvocation = (part: ToolPart) => {
   if (!part.toolInvocation) return "Unknown tool";

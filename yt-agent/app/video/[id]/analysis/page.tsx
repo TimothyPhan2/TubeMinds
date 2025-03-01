@@ -10,7 +10,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState,} from "react";
 import { ChatHistory } from "@/types/types";
 // import { getChatById } from "@/actions/getChatHistory";
-import { ArrowLeft, ChevronLeft, X, MessageSquare, PlayCircle, Image, FileText, PenTool, BarChart } from "lucide-react";
+import {  ChevronLeft, X, MessageSquare, PlayCircle, Image, FileText, PenTool, BarChart } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import AiAgentChat from "@/components/AiAgentChat";
 import { useUser } from "@clerk/nextjs";
@@ -29,7 +29,7 @@ export default function VideoAnalysisPage() {
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useUser();
   const [video, setVideo] = useState<Doc<"videos"> | null | undefined>(undefined)
-  console.log(setIsLoadingChat)
+  console.log(setIsLoadingChat,setSelectedChat,isLoading)
 
   useEffect(() => {
     const init = async () => {
