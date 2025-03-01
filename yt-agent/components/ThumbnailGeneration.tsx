@@ -24,13 +24,25 @@ export default function ThumbnailGeneration({ videoId }: { videoId: string }) {
       </div>
 
       {/* Horizontal scrollable images */}
-      <div className={`flex overflow-x-auto gap-4 ${images?.length && "mt-4"}`}>
+      <div 
+        className={`
+          flex gap-4 ${images?.length && "mt-4"}
+          ${images && images.length > 3 
+            ? 'overflow-x-auto pb-2 custom-scrollbar' 
+            : 'overflow-x-hidden'
+          }
+        `}
+        style={{
+          scrollbarWidth: 'thin',
+          scrollbarColor: 'rgba(99, 102, 241, 0.5) rgba(255, 255, 255, 0.1)'
+        }}
+      >
         {images?.map(
           (image) =>
             image.url && (
               <div
                 key={image._id}
-                className="flex-none w-[200px] h-[110px] rounded-lg overflow-x-auto border border-indigo-500/20 shadow-md"
+                className="flex-none w-[200px] h-[110px] rounded-lg border border-indigo-500/20 shadow-md"
               >
                 <Image
                   loading="lazy"

@@ -26,3 +26,23 @@ export interface ChatHistory {
     preview: string;
     videoDetails?: VideoDetails;
 }
+
+export interface ToolPart{
+    type: "tool-invocation";
+    toolInvocation: ToolInvocation;
+}
+
+export interface ToolInvocation{
+    toolCallId: string;
+    toolName: string;
+    result?: Record<string, unknown>;
+}
+
+// Extended Message type for chat persistence
+export interface ChatMessage {
+    id: string;
+    role: "user" | "assistant" | "system";
+    content: string | any;
+    createdAt?: Date;
+    _saved?: boolean;
+}

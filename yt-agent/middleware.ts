@@ -1,16 +1,17 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
 
 // protected routes
 
-const isProtectedRoute = createRouteMatcher(["/video(.*)"]);
+// const isProtectedRoute = createRouteMatcher(["/video(.*)"]);
 
-// public 
-// const isPublicRoute = createRouteMatcher([
-//   '/sign-in(.*)',
-//   '/sign-up(.*)',
-//   '/'
-// ])
+
+const isPublicRoute = createRouteMatcher([
+  '/sign-in(.*)',
+  '/sign-up(.*)',
+  '/'
+])
 export default clerkMiddleware(async (auth, req) => {
     const { userId, redirectToSignIn } = await auth();
 
@@ -18,8 +19,12 @@ export default clerkMiddleware(async (auth, req) => {
     //   await auth.protect()
     // }
 
-    if (!userId && isProtectedRoute(req)) {
-        return redirectToSignIn();
+    if (!userId && !isPublicRoute(req)) {
+        return redirectToSignIn( {returnBackUrl: req.url});
+    }
+
+    if (userId && !isPublicRoute(req)) {
+      return NextResponse.next()
     }
 });
 

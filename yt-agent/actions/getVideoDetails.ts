@@ -18,7 +18,7 @@ export async function getVideoDetails(videoId: string) {
         })
         const videoDetails = videoResponse.data.items?.[0];
         if(!videoDetails) throw new Error("Failed to fetch video details")
-        console.log("videoDetails= ", videoDetails)
+        // console.log("videoDetails= ", videoDetails)
         
         const channelResponse = await youtube.channels.list({
             part: ["statistics", "snippet"],
@@ -27,7 +27,7 @@ export async function getVideoDetails(videoId: string) {
         })
         const channelDetails = channelResponse.data.items?.[0];
         if(!channelDetails) throw new Error("Failed to fetch channel details")
-        console.log("channelDetails= ", channelDetails)
+        // console.log("channelDetails= ", channelDetails)
         
 
         const video: VideoDetails = {

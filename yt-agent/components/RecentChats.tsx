@@ -1,18 +1,17 @@
 "use client";
 
-import { getChatHistory } from "@/actions/getChatHistory";
-import { ChatHistory } from "@/types/types";
 import { Clock, Search } from "lucide-react";
 import { useEffect, useState } from "react";
-
-interface RecentChatsProps {
-  videoId: string;
-  onSelectChat: (chat: ChatHistory) => void;
-}
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { Id } from "@/convex/_generated/dataModel";
+import { getVideoDetails } from "@/actions/getVideoDetails";
 
 // Helper function to format relative time
-const formatRelativeTime = (dateString: string): string => {
-  const date = new Date(dateString);
+const formatRelativeTime = (timestamp: number): string => {
+  const date = new Date(timestamp);
   const now = new Date();
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
   
@@ -37,118 +36,169 @@ const formatRelativeTime = (dateString: string): string => {
   }
 };
 
-export default function RecentChats({ videoId, onSelectChat }: RecentChatsProps) {
-  const [chatHistory, setChatHistory] = useState<ChatHistory[]>([]);
+interface RecentChatsProps {
+  videoId?: string;
+}
+
+export default function RecentChats({ videoId }: RecentChatsProps) {
+  const { user } = useUser();
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Fetch chat history from the API
-  useEffect(() => {
-    const fetchChatHistory = async () => {
-      setIsLoading(true);
-      try {
-        const history = await getChatHistory();
-        setChatHistory(history);
-      } catch (error) {
-        console.error("Error fetching chat history:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const [videoTitles, setVideoTitles] = useState<Record<string, string>>({});
+  const [isLoadingTitles, setIsLoadingTitles] = useState(false);
+  
+  const recentChats = useQuery(api.chats.getRecentChats, {
+    userId: user?.id ?? "",
+    limit: 10
+  });
+  
+  const filteredChats = recentChats?.filter(chat => {
+    if (!searchQuery) return true;
     
-    fetchChatHistory();
-  }, [videoId]);
+    const query = searchQuery.toLowerCase();
+    
+    // Search in chat title
+    if (chat.title && chat.title.toLowerCase().includes(query)) {
+      return true;
+    }
+    
+    // Search in video title
+    const videoTitle = videoTitles[chat.videoId];
+    if (videoTitle && videoTitle.toLowerCase().includes(query)) {
+      return true;
+    }
+    
+    // Search in video ID
+    return chat.videoId.toLowerCase().includes(query);
+  }) || [];
 
-  // Filter chats based on search query
-  const filteredChats = chatHistory.filter(chat => 
-    chat.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    chat.preview.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const handleChatSelect = (chat: ChatHistory) => {
-    onSelectChat(chat);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent, chat: ChatHistory) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      onSelectChat(chat);
+  const handleSelectChat = (chatVideoId: string) => {
+    // If we're already on this video's page, don't navigate (prevents duplicate chats)
+    if (videoId === chatVideoId) {
+      // Just refresh the page to reset the chat state
+      window.location.reload();
+    } else {
+      router.push(`/video/${chatVideoId}/analysis`);
     }
   };
+  
+  // Function to fetch video titles
+  const fetchVideoTitles = async (chats: any[]) => {
+    if (!chats || chats.length === 0 || isLoadingTitles) return;
+    
+    setIsLoadingTitles(true);
+    
+    const uniqueVideoIds = [...new Set(chats.map(chat => chat.videoId))];
+    const titles: Record<string, string> = { ...videoTitles };
+    
+    for (const id of uniqueVideoIds) {
+      if (!titles[id]) {
+        try {
+          const details = await getVideoDetails(id);
+          if (details && details.title) {
+            titles[id] = details.title;
+          }
+        } catch (error) {
+          console.error(`Error fetching title for video ${id}:`, error);
+        }
+      }
+    }
+    
+    setVideoTitles(titles);
+    setIsLoadingTitles(false);
+  };
+  
+  // Fetch video titles when chats change
+  useEffect(() => {
+    if (recentChats) {
+      fetchVideoTitles(recentChats);
+    }
+  }, [recentChats]);
 
-  if (isLoading) {
+  if (!recentChats) {
     return (
-      <div className="h-full flex flex-col gap-4 p-4 backdrop-blur-md bg-white/70 border border-white/40 shadow-lg rounded-xl">
-        <h2 className="text-lg font-semibold text-gray-800">Recent Chats</h2>
-        <div className="flex items-center justify-center h-full">
-          <div className="animate-pulse flex flex-col space-y-3 w-full">
-            {[1, 2, 3, 4].map((item) => (
-              <div key={item} className="h-16 bg-gray-200 rounded-lg w-full"></div>
-            ))}
-          </div>
-        </div>
+      <div className="h-full flex items-center justify-center">
+        <div className="animate-pulse text-gray-500">Loading chats...</div>
       </div>
     );
   }
 
   return (
-    <div className="h-full flex flex-col gap-3 p-4 backdrop-blur-md bg-white/70 border border-white/40 shadow-lg rounded-xl overflow-hidden">
-      <h2 className="text-lg font-semibold text-gray-800">Recent Chats</h2>
-      
-      {/* Search input */}
-      <div className="relative">
-        <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
-          <Search className="h-3 w-3 text-gray-400" />
+    <div className="h-full flex flex-col overflow-hidden">
+      <div className="flex flex-col h-full p-4 backdrop-blur-md bg-white/70 border border-white/40 shadow-lg rounded-xl">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-800">Recent Chats</h2>
+          {isLoadingTitles && (
+            <span className="text-xs text-gray-500 flex items-center">
+              <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse mr-1"></div>
+              Fetching titles...
+            </span>
+          )}
         </div>
-        <input
-          type="text"
-          placeholder="Search..."
-          value={searchQuery}
-          onChange={handleSearchChange}
-          className="pl-7 w-full py-1.5 text-sm bg-white/50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-          aria-label="Search recent chats"
-        />
-      </div>
-      
-      {/* Chat list */}
-      <div className="flex-grow overflow-y-auto pr-1.5 -mr-1.5">
-        {filteredChats.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-gray-500 text-sm">
-            <p>No chats found</p>
+        
+        {/* Search input */}
+        <div className="relative mb-4">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Search className="h-4 w-4 text-gray-400" />
           </div>
-        ) : (
-          <div className="space-y-2">
-            {filteredChats.map((chat) => (
-              <div
-                key={chat.id}
-                onClick={() => handleChatSelect(chat)}
-                onKeyDown={(e) => handleKeyDown(e, chat)}
-                tabIndex={0}
-                className="p-2.5 bg-white/60 hover:bg-white/90 border border-gray-100 rounded-lg cursor-pointer transition-all duration-200 shadow-sm hover:shadow-md focus:ring-2 focus:ring-blue-500 outline-none"
-                aria-label={`Chat: ${chat.title}`}
-              >
-                <div className="flex justify-between items-start mb-1">
-                  <h3 className="font-medium text-gray-900 text-sm truncate">{chat.title}</h3>
-                  <div className="flex items-center text-xs text-gray-500 whitespace-nowrap ml-1">
-                    <Clock className="h-2.5 w-2.5 mr-0.5" />
-                    {formatRelativeTime(chat.timestamp)}
-                  </div>
-                </div>
-                <p className="text-xs text-gray-600 line-clamp-2">{chat.preview}</p>
-                {chat.videoId !== videoId && (
-                  <div className="mt-1.5">
-                    <span className="inline-block px-1.5 py-0.5 text-xs bg-blue-100 text-blue-800 rounded-full">
-                      Different video
+          <input
+            type="text"
+            placeholder="Search chats..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 pr-4 py-2 w-full bg-white/80 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+            >
+              <span className="sr-only">Clear search</span>
+              &times;
+            </button>
+          )}
+        </div>
+        
+        <div className="overflow-y-auto flex-grow pr-1">
+          {filteredChats.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full text-gray-500">
+              <p>No chats found</p>
+              {searchQuery && (
+                <button 
+                  onClick={() => setSearchQuery("")}
+                  className="text-blue-500 hover:text-blue-600 mt-2"
+                >
+                  Clear search
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="space-y-2.5">
+              {filteredChats.map((chat) => (
+                <div
+                  key={chat._id}
+                  onClick={() => handleSelectChat(chat.videoId)}
+                  tabIndex={0}
+                  className="p-3 bg-white/80 hover:bg-white border border-gray-100 rounded-lg cursor-pointer transition-all duration-200 shadow-sm hover:shadow-md focus:ring-2 focus:ring-blue-500 outline-none"
+                  aria-label={`Chat: ${chat.title || "Untitled chat"}`}
+                >
+                  <div className="flex justify-between items-start">
+                    <h3 className="font-medium text-gray-900 truncate max-w-[90%]">
+                      {videoTitles[chat.videoId] || (
+                        <span className="text-gray-500">
+                          Loading title...
+                        </span>
+                      )}
+                    </h3>
+                    <span className="text-xs text-gray-500 whitespace-nowrap">
+                      {formatRelativeTime(chat.updatedAt)}
                     </span>
                   </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

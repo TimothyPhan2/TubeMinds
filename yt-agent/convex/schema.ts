@@ -42,4 +42,28 @@ export default defineSchema({
     .index("by_user_id", ["userId"])
     .index("by_video_id", ["videoId"])
     .index("by_user_and_video", ["userId", "videoId"]),
+    
+  chats: defineTable({
+    userId: v.string(),
+    videoId: v.string(),
+    title: v.optional(v.string()), // Optional chat title
+    createdAt: v.number(), // Timestamp
+    updatedAt: v.number(), // Timestamp
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_and_video", ["userId", "videoId"])
+    .index("by_recent", ["userId", "updatedAt"]),
+  
+  chatMessages: defineTable({
+    chatId: v.id("chats"),
+    role: v.string(), // "user" or "assistant"
+    content: v.string(),
+    timestamp: v.number(),
+    // For tool calls/results
+    toolName: v.optional(v.string()),
+    toolInput: v.optional(v.any()),
+    toolOutput: v.optional(v.any()),
+  })
+    .index("by_chat", ["chatId"])
+    .index("by_chat_and_timestamp", ["chatId", "timestamp"]),
 });

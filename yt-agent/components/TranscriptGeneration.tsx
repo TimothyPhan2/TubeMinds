@@ -1,11 +1,12 @@
 "use client";
 
+import React from "react";
 import { FeatureFlag } from "@/features/flags";
 import { TranscriptEntry } from "@/types/types";
 import { useSchematicEntitlement } from "@schematichq/schematic-react";
-import { useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import Usage from "./Usage";
-
+import { getYoutubeTranscript } from "@/actions/getYoutubeTranscript";
 
 export default function TranscriptGeneration({ videoId }: { videoId: string }) {
   const [transcript, setTranscript] = useState<{
@@ -17,6 +18,22 @@ export default function TranscriptGeneration({ videoId }: { videoId: string }) {
   const { featureUsageExceeded } = useSchematicEntitlement(
     FeatureFlag.TRANSCRIPTION
   );
+
+  const handleGenerateTranscription = useCallback(async (videoId: string) => {
+    if (featureUsageExceeded) {
+      console.log("Transcription limit reached, the user must upgrade");
+      return;
+    }
+    
+    const result = await getYoutubeTranscript(videoId);
+    
+    setTranscript(result);
+  }, [featureUsageExceeded]);
+
+  useEffect(() => {
+    handleGenerateTranscription(videoId);
+  }, [handleGenerateTranscription, videoId]);
+
   return (
     <div className="rounded-xl p-4 pb-0 gap-4 flex flex-col">
       <Usage featureFlag={FeatureFlag.TRANSCRIPTION} title="Transcription" />
