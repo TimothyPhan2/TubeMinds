@@ -4,6 +4,8 @@ import "./globals.css";
 import ClientWrapper from "@/components/ClientWrapper";
 import Header from "@/components/Header";
 
+
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -29,11 +31,18 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+          
         <ClientWrapper>
-          <Header />
-          <main>
-            {children}
-          </main>
+       
+            <Header />
+       
+           
+            <main>
+            
+              {children}
+            </main>
+      
+        
         </ClientWrapper>
       </body>
     </html>

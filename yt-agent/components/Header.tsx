@@ -65,7 +65,7 @@ export default function Header() {
             </SignedIn>
 
             <SignedOut>
-              <SignInButton>
+              <SignInButton mode="modal">
                 <Button
                   className="relative inline-flex items-center justify-center px-8 py-3.5 font-medium text-white transition-all rounded-lg text-base overflow-hidden
           bg-gradient-to-r from-pink-500 to-violet-500 hover:from-pink-600 hover:to-violet-600

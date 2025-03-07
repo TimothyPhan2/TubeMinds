@@ -2,7 +2,6 @@
 
 import {redirect} from "next/navigation"
 import { getVideoIDFromUrl } from "@/lib/getVideoIDFromUrl"
-import { currentUser } from "@clerk/nextjs/server"
 export default async function AnalyzeYoutubeVideo(formData: FormData) {
 
     const url = formData.get("url")?.toString()

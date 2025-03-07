@@ -8,6 +8,7 @@ import { ChatMessage, ToolPart } from "@/types/types";
 import { useSchematicFlag } from "@schematichq/schematic-react";
 import { FeatureFlag } from "@/features/flags";
 import { useEffect, useRef } from "react";
+import { Input } from "./ui/input";
 
 const formatToolInvocation = (part: ToolPart) => {
   if (!part.toolInvocation) return "Unknown tool";
@@ -195,7 +196,7 @@ export default function AiAgentChat({ videoId }: { videoId: string }) {
       <div className="relative z-10">
         <div className="space-y-3">
           <form onSubmit={handleSubmit} className="flex gap-2">
-            <input
+            <Input
               name="prompt"
               type="text"
               placeholder={
@@ -203,7 +204,7 @@ export default function AiAgentChat({ videoId }: { videoId: string }) {
                   ? "Upgrade to ask anything about your video..."
                   : "Ask anything about your video..."
               }
-              className="flex-1 w-full px-4 py-3 text-white bg-black/20 border border-indigo-500/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-pink-500/50 placeholder:text-white/40 transition-all duration-200"
+              className="flex-1 w-full h-10 px-4 py-3 text-white bg-black/20 border border-indigo-500/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-pink-500/50 placeholder:text-white/40 transition-all duration-200"
               value={input}
               onChange={handleInputChange}
               aria-label="Chat message input"

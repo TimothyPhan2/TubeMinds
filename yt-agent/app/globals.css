@@ -9,7 +9,7 @@
 @theme {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  
+
 }
 
 /* Animation keyframes */
@@ -306,4 +306,5 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+
 }
